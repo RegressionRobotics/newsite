@@ -1,0 +1,371 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FTC Team 30432 - Regression</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/5968/5968702.png" />
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <style>
+        .parallax {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        #home.parallax {
+            background-image: url('https://via.placeholder.com/1920x1080?text=Regression+Team+Photo');
+        }
+        #about.parallax {
+            background-image: url('https://via.placeholder.com/1920x1080?text=Robot+Design+Workspace');
+        }
+        .content-overlay {
+            position: relative;
+            z-index: 1;
+        }
+        #particle-container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+        body {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        nav {
+            background-color: #000000;
+        }
+        a {
+            color: #ff0000;
+        }
+        a:hover {
+            color: #ff0000;
+        }
+        button {
+            background-color: #ff0000;
+            color: #ffffff;
+        }
+        button:hover {
+            background-color: #ff0000;
+        }
+        input, textarea {
+            background-color: #000000;
+            color: #ffffff;
+            border-color: #ffffff;
+        }
+        input:focus, textarea:focus {
+            border-color: #ff0000;
+        }
+        .shadow-md {
+            box-shadow: 0 4px 6px rgba(255, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-black text-white font-sans relative">
+    <div id="particle-container">
+        <div id="particles-js"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-black shadow-md sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Logo_TechCrunch.svg/1200px-Logo_TechCrunch.svg.png" alt="Regression Robotics Logo" class="h-10">
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="#home" class="text-red-600 hover:text-red-600">Home</a>
+                    <a href="#about" class="text-red-600 hover:text-red-600">About</a>
+                    <a href="#sponsors" class="text-red-600 hover:text-red-600">Sponsors</a>
+                    <a href="#tiers" class="text-red-600 hover:text-red-600">Sponsorship Tiers</a>
+                    <a href="#sponsorship-types" class="text-red-600 hover:text-red-600">Sponsorship Types</a>
+                    <a href="#contact" class="text-red-600 hover:text-red-600">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="parallax relative py-20">
+        <div class="content-overlay max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">FTC Team 30432 - Regression</h1>
+            <p class="text-lg md:text-xl mb-6">Building the future through robotics, innovation, and teamwork in the FIRST Tech Challenge.</p>
+            <a href="#contact" class="bg-red-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-red-600">Join Our Journey</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="parallax py-16 bg-black">
+        <div class="content-overlay max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-white mb-8 text-center">About Team Regression</h2>
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-6 md:mb-0">
+                    <img src="https://www.firstinspires.org/sites/default/files/uploads/robotics/ftc/2018-2019/FTC_Robot.jpg" alt="Team Regression Robot" class="rounded-lg shadow-md mx-auto">
+                </div>
+                <div class="md:w-1/2 md:pl-8">
+                    <p class="text-white mb-4">Regression Robotics, known as FTC Team 30432, is a nonprofit dedicated to advancing robotics engineering. With a team size of 2-10 members, we compete in the FIRST Tech Challenge (FTC), focusing on designing, building, and programming innovative robots. Based in [Location - Update with Team's City/State], our name 'Regression' reflects our commitment to analyzing data and refining strategies to achieve excellence.</p>
+                    <p class="text-white mb-4">As part of FIRST, we embrace teamwork, gracious professionalism, and STEM education. Our team leverages tools like Java, Android Studio, and advanced techniques such as machine learning and regression analysis to optimize our robot's performance, inspired by the FTC community's innovative spirit. Visit us at <a href="https://www.regressionftc.com" target="_blank" class="text-red-600 hover:text-red-600">www.regressionftc.com</a>.</p>
+                    <p class="text-white">Join us as we compete, learn, and grow in the exciting world of robotics!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sponsors Section -->
+    <section id="sponsors" class="py-16 bg-black">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-white mb-8 text-center">Our Sponsors</h2>
+            <p class="text-white mb-8 text-center">We are grateful for the generous support of our sponsors, who make our participation in FIRST Tech Challenge possible.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Mitsubishi -->
+                <div class="flex flex-col items-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Mitsubishi_Motors_logo.svg/1200px-Mitsubishi_Motors_logo.svg.png" alt="Mitsubishi Logo" class="h-20 mb-4">
+                    <p class="text-white text-center">Mitsubishi supports our team with resources that fuel our innovation in robotics and engineering.</p>
+                </div>
+                <!-- Costco -->
+                <div class="flex flex-col items-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Costco_Wholesale.svg/1200px-Costco_Wholesale.svg.png" alt="Costco Logo" class="h-20 mb-4">
+                    <p class="text-white text-center">Costco provides essential funding and materials to help us compete and grow as a team.</p>
+                </div>
+                <!-- goBILDA -->
+                <div class="flex flex-col items-center">
+                    <img src="https://cdn.shopify.com/s/files/1/0056/2106/1356/files/GoBilda_Logo_300x300.png?v=1613658982" alt="goBILDA Logo" class="h-20 mb-4">
+                    <p class="text-white text-center">goBILDA supplies high-quality robotics components, enabling us to build robust and competitive robots.</p>
+                </div>
+                <!-- Polymaker -->
+                <div class="flex flex-col items-center">
+                    <img src="https://polymaker.com/wp-content/uploads/2020/01/polymaker-logo-black.png" alt="Polymaker Logo" class="h-20 mb-4">
+                    <p class="text-white text-center">Polymaker provides advanced 3D printing materials for prototyping and creating custom parts.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sponsorship Tiers Section -->
+    <section id="tiers" class="py-16 bg-black">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-white mb-8 text-center">Sponsorship Tiers</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <!-- Steel Tier -->
+                <div class="bg-black p-6 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-semibold mb-4 text-white">Steel Tier</h3>
+                    <p class="mb-2 text-white">Up to $499</p>
+                    <ul class="list-disc list-inside mb-4 text-white">
+                        <li>Name and logo on team website</li>
+                        <li>Mention in engineering portfolio shared with FIRST</li>
+                        <li>End-of-season report</li>
+                        <li>Documentation for tax deductions</li>
+                        <li>Name and logo on robot for the season</li>
+                    </ul>
+                    <a href="#contact" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-600">Donate</a>
+                </div>
+                <!-- Silver Tier -->
+                <div class="bg-black p-6 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-semibold mb-4 text-white">Silver Tier</h3>
+                    <p class="mb-2 text-white">$500 - $999</p>
+                    <ul class="list-disc list-inside mb-4 text-white">
+                        <li>Social media shoutout highlighting your support</li>
+                        <li>Name and logo displayed in competition pit area</li>
+                        <li>Name and logo on banner displayed at events</li>
+                        <li>All Steel Tier benefits</li>
+                    </ul>
+                    <a href="#contact" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-600">Donate</a>
+                </div>
+                <!-- Gold Tier -->
+                <div class="bg-black p-6 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-semibold mb-4 text-white">Gold Tier</h3>
+                    <p class="mb-2 text-white">$1,000 - $2,499</p>
+                    <ul class="list-disc list-inside mb-4 text-white">
+                        <li>Dedicated social media post featuring your company</li>
+                        <li>Robot demonstration at your request</li>
+                        <li>Free team merchandise (e.g., shirts)</li>
+                        <li>All Silver Tier benefits</li>
+                    </ul>
+                    <a href="#contact" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-600">Donate</a>
+                </div>
+                <!-- Titanium Tier -->
+                <div class="bg-black p-6 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-semibold mb-4 text-white">Titanium Tier</h3>
+                    <p class="mb-2 text-white">$2,500+</p>
+                    <ul class="list-disc list-inside mb-4 text-white">
+                        <li>Company cards or pins distributed at FIRST events</li>
+                        <li>Highlighted as lead sponsor on website, team shirts, robot, and social media</li>
+                        <li>All Gold Tier benefits</li>
+                    </ul>
+                    <a href="#contact" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-600">Donate</a>
+                </div>
+            </div>
+            <p class="text-center mt-4 text-white">NOTE: Robot demos are subject to team availability and event schedules.</p>
+        </div>
+    </section>
+
+    <!-- Types of Sponsorship Section -->
+    <section id="sponsorship-types" class="py-16 bg-black">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold mb-8 text-center text-red-600">Types of Sponsorship</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Monetary -->
+                <div class="bg-black p-6 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-semibold mb-4 text-red-600">Monetary</h3>
+                    <p class="mb-4 text-white">Financial contributions that help us purchase equipment, materials, and cover competition fees.</p>
+                    <a href="#contact" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-600">Donate Now</a>
+                </div>
+                <!-- In-Kind -->
+                <div class="bg-black p-6 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-semibold mb-4 text-red-600">In-Kind</h3>
+                    <p class="mb-4 text-white">Donations of equipment, materials, software licenses, workspace, or other resources.</p>
+                    <a href="#contact" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-600">Contact Us</a>
+                </div>
+                <!-- Mentorship -->
+                <div class="bg-black p-6 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-semibold mb-4 text-red-600">Mentorship</h3>
+                    <p class="mb-4 text-white">Share your expertise with our team through mentorship, technical guidance, or industry insights.</p>
+                    <a href="#contact" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-600">Become a Mentor</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="bg-black py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-white mb-8 text-center">Contact Us</h2>
+            <div class="max-w-lg mx-auto">
+                <div class="bg-black p-6 rounded-lg shadow-md">
+                    <div class="mb-4">
+                        <label for="name" class="block text-white font-semibold mb-2">Name</label>
+                        <input type="text" id="name" class="w-full px-4 py-2 border-white bg-black text-white border rounded-md focus:outline-none focus:ring-2 focus:ring-red-600" placeholder="Your Name">
+                    </div>
+                    <div class="mb-4">
+                        <label for="email" class="block text-white font-semibold mb-2">Email</label>
+                        <input type="email" id="email" class="w-full px-4 py-2 border-white bg-black text-white border rounded-md focus:outline-none focus:ring-2 focus:ring-red-600" placeholder="Your Email">
+                    </div>
+                    <div class="mb-4">
+                        <label for="message" class="block text-white font-semibold mb-2">Message</label>
+                        <textarea id="message" class="w-full px-4 py-2 border-white bg-black text-white border rounded-md focus:outline-none focus:ring-2 focus:ring-red-600" rows="5" placeholder="Your Message"></textarea>
+                    </div>
+                    <button onclick="alert('Form submission is disabled in this demo. Please contact the team directly.')" class="w-full bg-red-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-red-600">Send Message</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black text-white py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h3 class="text-2xl font-semibold mb-4 text-red-600">Follow Us</h3>
+            <div class="flex justify-center space-x-6">
+                <a href="https://github.com/RegressionRobotics" target="_blank" class="hover:text-red-600">
+                    <svg class="h-6 w-6" fill="#ffffff" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.483 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.087.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.03-2.682-.103-.253-.447-1.27.098-2.647 0 0 .84-.269 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.545 1.377.2 2.394.097 2.647.64.698 1.03 1.591 1.03 2.682 0 3.841-2.337 4.687-4.565 4.935.359.308.678.916.678 1.847 0 1.332-.012 2.406-.012 2.734 0 .267.18.577.688.479C19.137 20.166 22 16.418 22 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd"/>
+                    </svg>
+                </a>
+                <a href="https://www.youtube.com/@regressionFTC" target="_blank" class="hover:text-red-600">
+                    <svg class="h-6 w-6" fill="#ffffff" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 4-8 4z"/>
+                    </svg>
+                </a>
+                <a href="https://www.instagram.com/regressionftc/" target="_blank" class="hover:text-red-600">
+                    <svg class="h-6 w-6" fill="#ffffff" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.233.308 2.686.644.465.332.822.914 1.153 1.746.332.832.507 1.753.607 2.686.058 1.265.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.1.933-.275 1.854-.607 2.686-.331.832-.688 1.414-1.153 1.746-.453.336-1.32.582-2.686.644-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.233-.308-2.686-.644-.465-.332-.822-.914-1.153-1.746-.332-.832-.507-1.753-.607-2.686-.058-1.265-.07-1.646-.07-4.85s.012-3.584.07-4.85c.1-.933.275-1.854.607-2.686.331-.832.688-1.414 1.153-1.746.453-.336 1.32-.582 2.686-.644 1.266-.058 1.646-.07 4.85-.07zm0 1.637c-3.197 0-3.592.013-4.853.072-1.17.056-1.95.252-2.638.546-.676.292-1.152.653-1.644 1.145-.492.492-.853 1.066-1.145 1.644-.294.688-.49 1.468-.546 2.638-.059 1.261-.072 1.656-.072 4.853s.013 3.592.072 4.853c.056 1.17.252 1.95.546 2.638.292.676.653 1.152 1.145 1.644.492.492 1.066.853 1.644 1.145.688.294 1.468.49 2.638.546 1.261.059 1.656.072 4.853.072s3.592-.013 4.853-.072c1.17-.056 1.95-.252 2.638-.546.676-.292 1.152-.653 1.644-1.145.492-.492.853-1.066 1.145-1.644.294-.688.49-1.468.546-2.638.059-1.261.072-1.656.072-4.853s-.013-3.592-.072-4.853c-.056-1.17-.252-1.95-.546-2.638-.292-.676-.653-1.152-1.145-1.644-.492-.492-1.066-.853-1.644-1.145-.688-.294-1.468-.49-2.638-.546-1.261-.059-1.656-.072-4.853-.072zm0 5.838c-2.855 0-5.163 2.308-5.163 5.163s2.308 5.163 5.163 5.163 5.163-2.308 5.163-5.163-2.308-5.163-5.163-5.163zm0 8.49c-1.994 0-3.327-1.333-3.327-3.327s1.333-3.327 3.327-3.327 3.327 1.333 3.327 3.327-1.333 3.327-3.327 3.327zm5.704-6.916c0 .552-.448 1-1 1s-1-.448-1-1 .448-1 1-1 1 .448 1 1z"/>
+                    </svg>
+                </a>
+                <a href="https://www.linkedin.com/company/regressionrobotics" target="_blank" class="hover:text-red-600">
+                    <svg class="h-6 w-6" fill="#ffffff" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-1.337-.025-3.05-1.864-3.05-1.865 0-2.149 1.451-2.149 2.953v5.701h-3v-11h2.887v1.523h.041c.401-.762 1.382-1.864 2.837-1.864 3.037 0 3.6 1.997 3.6 4.594v6.747z"/>
+                    </svg>
+                </a>
+                <a href="https://www.twitch.tv/regressionftc" target="_blank" class="hover:text-red-600">
+                    <svg class="h-6 w-6" fill="#ffffff" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M2.149 0l-1.612 4.119v16.836h5.731v3.045h3.225l3.045-3.045h4.645l6.129-6.129v-11.826h-21.163zm17.708 14.219l-3.226 3.226h-4.806l-3.226 3.226v-3.226h-3.871v-12.645h15.129v9.419zm-6.452-5.645v6.129h2.871v-6.129h-2.871zm-5.645 0v6.129h2.871v-6.129h-2.871z"/>
+                    </svg>
+                </a>
+                <a href="https://x.com/RegressionFTC" target="_blank" class="hover:text-red-600">
+                    <svg class="h-6 w-6" fill="#ffffff" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482A13.87 13.87 0 011.67 4.582a4.964 4.964 0 001.524 6.573 4.903 4.903 0 01-2.228-.616c-.054 2.281 1.581 4.415 3.949 4.89a4.935 4.935 0 01-2.224.084 4.928 4.928 0 004.6 3.419A9.9 9.9 0 010 19.54a13.94 13.94 0 007.548 2.212c9.142 0 14.307-7.721 13.995-14.646A10.025 10.025 0 0024 4.557z"/>
+                    </svg>
+                </a>
+            </div>
+            <p class="mt-4 text-white">© 2025 FTC Team 30432 - Regression. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize particles.js with red, black, and white colors
+        particlesJS("particles-js", {
+            "particles": {
+                "number": {"value": 80, "density": {"enable": true, "value_area": 800}},
+                "color": {"value": ["#ffffff", "#ff0000", "#000000"]},
+                "shape": {"type": "circle"},
+                "opacity": {"value": 0.5, "random": true},
+                "size": {"value": 3, "random": true},
+                "line_linked": {"enable": true, "distance": 150, "color": "#ff0000", "opacity": 0.4, "width": 1},
+                "move": {"enable": true, "speed": 2, "direction": "none", "random": true, "straight": false}
+            },
+            "interactivity": {
+                "events": {"onhover": {"enable": true, "mode": "repulse"}, "onclick": {"enable": true, "mode": "push"}},
+                "modes": {"repulse": {"distance": 100}, "push": {"particles_nb": 4}}
+            }
+        });
+
+        // Parallax effect
+        window.addEventListener('scroll', function() {
+            const scroll = window.pageYOffset;
+            document.querySelectorAll('.parallax').forEach(element => {
+                element.style.backgroundPositionY = -(scroll * 0.5) + 'px';
+            });
+        });
+    </script>
+</body>
+</html>
