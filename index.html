@@ -358,17 +358,29 @@
         async function fetchSeasonData() {
             const seasonDataDiv = document.getElementById('season-data');
             const query = `
-                query {
-                    teamByNumber(number: 30432) {
+  query($season: Int!) {
+                    teamByNumber(number: 27352) {
                         number
-                        matchRecords(season: 2025) {
-                            matches {
-                                number
-                                result
-                                score
+                        matches(season: 2024) {
+                            match {
+                                matchNum
+                                
+                                teams {
+                                  
+                                  team {
+                                    name
+                                  }
+                                  alliance
+                                }
+                              scheduledStartTime
+                              
                             }
-                            rank
                         }
+                      quickStats(season: 2024) {
+                        auto {
+                          rank
+                        }
+                      }
                     }
                 }
             `;
