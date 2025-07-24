@@ -359,6 +359,7 @@
             const seasonDataDiv = document.getElementById('season-data');
             const query = `
   query($season: Int!) {
+  query($season: Int!) {
                     teamByNumber(number: 27352) {
                         number
                         matches(season: 2024) {
@@ -373,7 +374,19 @@
                                   alliance
                                 }
                               scheduledStartTime
-                              
+                              scores {
+                                ... on MatchScores2024 {
+                                  matchId
+                                  blue {
+                                    alliance
+                                    totalPoints
+                                  }
+                                  red {
+                                    alliance
+                                    totalPoints
+                                  }
+                                }
+                              }
                             }
                         }
                       quickStats(season: 2024) {
